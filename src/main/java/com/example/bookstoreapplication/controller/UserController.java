@@ -11,10 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/User")
+@RequestMapping("/UserPage")
 public class UserController {
     @Autowired
     IuserService iuserService;
@@ -22,7 +23,7 @@ public class UserController {
     //--------------------------------- Add New User Data ---------------------------------
 
     @PostMapping("/Register_New_User")
-    public ResponseEntity<Response> registerNewUser(@RequestBody RegisterDTO registerDTO) {
+    public ResponseEntity<Response> registerNewUser(@Valid @RequestBody  RegisterDTO registerDTO) {
         iuserService.registerNewUser(registerDTO);
         Response response = new Response(registerDTO, "User Registered Successful");
         return new ResponseEntity<>(response, HttpStatus.OK);
