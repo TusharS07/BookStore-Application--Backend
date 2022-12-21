@@ -23,5 +23,4 @@ public class EmailService {
         javaMail.send(simpleMailMessage);
         return "mail send successfully";
     }
-
 }

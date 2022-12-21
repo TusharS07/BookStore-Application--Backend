@@ -3,6 +3,7 @@ package com.example.bookstoreapplication.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,4 +20,5 @@ public class UserModel {
     private String password;
     private boolean isLogin = false;
     private String role ;
+
 }

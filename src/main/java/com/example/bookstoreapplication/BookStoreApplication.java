@@ -12,5 +12,4 @@ public class BookStoreApplication {
         SpringApplication.run(BookStoreApplication.class, args);
         System.out.println("Welcome to BookStore Application");
     }
-
 }

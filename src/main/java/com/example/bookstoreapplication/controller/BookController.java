@@ -65,6 +65,14 @@ public class BookController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    //----------------------------- Search Books by Author Name --------------------------------------------------------------------
+    @GetMapping("/Search_Books_By_Author_Name")
+    public ResponseEntity<Response> searchBooksByAuthorName(@RequestParam String authorName) {
+        List<BookModel> bookModelList = ibookService.searchBookByAuthorName(authorName);
+        Response response = new Response(bookModelList, "successfully record founded for given Author name: " + authorName);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     //--------------------------------- Sort Book Data By Price High To Low ---------------------------------
     @GetMapping("/Sort_Books_By_Price_HighToLow")
     public ResponseEntity<Response> sortBooksByPriceHighToLow() {

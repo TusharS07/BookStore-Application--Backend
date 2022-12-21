@@ -12,11 +12,8 @@ public interface IbookService {
     List<BookModel> showAllBooks();
     BookModel getBookByID(int id);
     List<BookModel> searchBookByName(String bookName);
+    List<BookModel> searchBookByAuthorName(String authorName);
     List<BookModel> sortBookByPriceHighToLow();
     List<BookModel> sortBookByPriceLowToHigh();
     List<BookModel> sortBooksByNewestArrivals();
-
-
-
-
 }
