@@ -7,7 +7,16 @@ import java.util.List;
 
 public interface IcartService {
     CartModel addToCart(String token, CartDTO cartDTO);
+
+    CartModel updateBookCart(String token, CartDTO cartDTO);
+
+    String removeBookFromCart(String token, int cartId);
+
     CartModel getCartRecordById(String token, int cartId);
-    List<CartModel> getUserCartRecordByUserId(String token);
+
+    List<CartModel> getUserCartRecordByUser(String token);
+
+
+
 
 }

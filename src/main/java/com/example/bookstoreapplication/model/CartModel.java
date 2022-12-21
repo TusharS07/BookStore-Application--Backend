@@ -6,9 +6,7 @@ import javax.persistence.*;
 
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
-@AllArgsConstructor
 @Entity
 public class CartModel {
     @Id
@@ -25,4 +23,10 @@ public class CartModel {
 
     private double totalPrice;
 
+    public CartModel(UserModel userData, BookModel bookData, int quantity, double totalPrice) {
+        this.userData = userData;
+        this.bookData = bookData;
+        this.quantity = quantity;
+        this.totalPrice = totalPrice;
+    }
 }

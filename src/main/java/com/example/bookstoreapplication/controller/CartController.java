@@ -27,14 +27,32 @@ public class CartController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    //--------------------------------- Update Cart Data ---------------------------------
+    @PutMapping("UpdateBookCart")
+    public ResponseEntity<Response> updateBookCart(@RequestHeader String token, CartDTO cartDTO) {
+        CartModel cartModel = icartService.updateBookCart(token, cartDTO);
+        Response response = new Response(cartModel, "Book Quantity Update Into Cart Successful");
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    //--------------------------------- Delete Cart Data ---------------------------------
+    @DeleteMapping("/Remove_Book_From_Cart")
+    public ResponseEntity<Response> removeBookFromCart(@RequestHeader String token, @RequestParam int id) {
+        icartService.removeBookFromCart(token,id);
+        Response response = new Response("Removed Book for id: " + id, "Book Remove Successful");
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    //--------------------------------- Show Cart Data(Books) ---------------------------------
     @GetMapping("/Show_UserCart_Record_byUser")
     public ResponseEntity<Response> showUserCartRecords(@RequestHeader String token) {
-        List<CartModel> userCartDetails = icartService.getUserCartRecordByUserId(token);
+        List<CartModel> userCartDetails = icartService.getUserCartRecordByUser(token);
         Response response = new Response(userCartDetails, "Cart record retrieved successfully for User");
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
 
+    //--------------------------------- Get Cart Data by Cart Id (Only Admin) ---------------------------------
     @GetMapping("/get_Cart_Record_byCartId")
     public ResponseEntity<Response> getCartRecordbyCartId(@RequestHeader String token, @RequestParam int cartId) {
         CartModel cartModel = icartService.getCartRecordById(token, cartId);

@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 
+
 @Getter
 @Setter
 @ToString
@@ -23,5 +24,4 @@ public class BookModel {
     private int price;
     private String profilePic;
     private String bookDescription;
-
 }
