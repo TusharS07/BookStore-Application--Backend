@@ -54,7 +54,7 @@ public class UserService implements IuserService{
                 userModel.setLogin(true);
                 userModel.setId(userModel.getId());
                 userRepository.save(userModel);
-                emailService.sendMail(loginDTO.getEmail(), "Login Successful");
+                //emailService.sendMail(loginDTO.getEmail(), "Login Successful");
                 return token;
             }
             throw new BookStoreException("please check Your Password");

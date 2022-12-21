@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -36,7 +37,7 @@ public class CartService implements IcartService{
     JwtUtils jwtUtils;
 
 
-    //--------------------------------- Add New Cart Data ---------------------------------------------------------------
+    //--------------------------------- Add New Cart Data -----------------------------------------------------------------
     @Override
     public CartModel addToCart(String token, CartDTO cartDTO) {
         LoginDTO loginDTO = jwtUtils.decodeToken(token);
@@ -55,7 +56,7 @@ public class CartService implements IcartService{
                             +"\nif you want to add more Quantity for this book"
                             +"\nthen please go to cart and update Book Quantity");
                 }
-                throw new BookStoreException(cartDTO.getQuantity()+ "Books Not available in Stock"+
+                throw new BookStoreException(cartDTO.getQuantity()+ " Books Not available in Stock"+
                         "\nOnly "+ book.getBookQuantity()+" Books available in stock");
             }
             throw new BookStoreException("Book Not Found");
@@ -67,7 +68,7 @@ public class CartService implements IcartService{
         return quantity * bookPrice;
     }
 
-    //--------------------------------- Update Cart Data --------------------------------------------------
+    //--------------------------------- Update Cart Data ------------------------------------------------------------------
     @Override
     public CartModel updateBookCart(String token, CartDTO cartDTO) {
         LoginDTO loginDTO = jwtUtils.decodeToken(token);
@@ -90,7 +91,7 @@ public class CartService implements IcartService{
         throw new BookStoreException("Please first Login Application");
     }
 
-    //--------------------------------- Delete Cart Data ---------------------------------
+    //--------------------------------- Delete Cart Data -----------------------------------------------------------------
     @Override
     public String removeBookFromCart(String token, int cartId) {
         LoginDTO loginDTO = jwtUtils.decodeToken(token);
@@ -98,15 +99,14 @@ public class CartService implements IcartService{
         if (userRepository.findByEmail(user.getEmail()).isLogin()) {
             if (cartRepository.findById(cartId).isPresent()) {
                 cartRepository.deleteById(cartId);
-                return "Book Remove from Cart Successful";
+                return "Delete Successful";
             }
-            throw new BookStoreException("Book Not Found "+"\n Invalid Id");
+            throw new BookStoreException("Book Not Found");
         }
         throw new BookStoreException("Please first Login Application");
     }
 
-
-    //--------------------------------- Get Cart Data by Cart Id (Only Admin) ---------------------------------
+    //--------------------------------- Get Cart Data by Cart Id (Only Admin) -------------------------------------------
 
     @Override
     public CartModel getCartRecordById(String token, int cartId) {

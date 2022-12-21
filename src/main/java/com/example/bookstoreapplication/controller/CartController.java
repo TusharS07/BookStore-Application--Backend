@@ -21,7 +21,7 @@ public class CartController {
 
     //--------------------------------- Add New Cart Data ---------------------------------
     @PostMapping("/AddToCart")
-    public ResponseEntity<Response> addToCart(@RequestHeader String token, CartDTO cartDTO) {
+    public ResponseEntity<Response> addToCart(@RequestHeader String token, @RequestBody CartDTO cartDTO) {
         CartModel cartModel = icartService.addToCart(token, cartDTO);
         Response response = new Response(cartModel, "Books Added Into Cart Successful");
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -29,7 +29,7 @@ public class CartController {
 
     //--------------------------------- Update Cart Data ---------------------------------
     @PutMapping("UpdateBookCart")
-    public ResponseEntity<Response> updateBookCart(@RequestHeader String token, CartDTO cartDTO) {
+    public ResponseEntity<Response> updateBookCart(@RequestHeader String token, @RequestBody CartDTO cartDTO) {
         CartModel cartModel = icartService.updateBookCart(token, cartDTO);
         Response response = new Response(cartModel, "Book Quantity Update Into Cart Successful");
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -37,11 +37,12 @@ public class CartController {
 
     //--------------------------------- Delete Cart Data ---------------------------------
     @DeleteMapping("/Remove_Book_From_Cart")
-    public ResponseEntity<Response> removeBookFromCart(@RequestHeader String token, @RequestParam int id) {
-        icartService.removeBookFromCart(token,id);
-        Response response = new Response("Removed Book for id: " + id, "Book Remove Successful");
+    public ResponseEntity<Response> removeBookFromCart(@RequestHeader String token, @RequestParam int cartId) {
+        icartService.removeBookFromCart(token,cartId);
+        Response response = new Response("Removed Book for id: " + cartId, "Book Remove Successful");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
 
     //--------------------------------- Show Cart Data(Books) ---------------------------------
     @GetMapping("/Show_UserCart_Record_byUser")

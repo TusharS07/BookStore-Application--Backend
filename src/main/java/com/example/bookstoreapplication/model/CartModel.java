@@ -13,11 +13,11 @@ public class CartModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  int cartId;
     private int quantity;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne()
     @JoinColumn(name = "userId")
     private UserModel userData;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "bookId")
     private BookModel bookData;
 
