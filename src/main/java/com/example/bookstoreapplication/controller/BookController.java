@@ -19,7 +19,7 @@ public class BookController {
     IbookService ibookService;
 
     //----------------------------- Add New Books ----------------------------------------------------------------------
-    @PostMapping("/Add_Books")
+    @PostMapping("/Add_Books/Admin")
     public ResponseEntity<Response> addBooks(@RequestHeader String token, @RequestBody BookDTO bookDTO) {
         ibookService.addBooks(token,bookDTO);
         Response response = new Response(bookDTO, "Book Added Successful");
@@ -27,14 +27,14 @@ public class BookController {
     }
 
     //----------------------------- Update Books Data ------------------------------------------------------------------
-    @PutMapping("/Update_Books_Data")
+    @PutMapping("/Update_Books_Data/Admin")
     public ResponseEntity<Response> updateBook(@RequestHeader String token,@RequestParam int id, @RequestBody BookDTO bookDTO) {
         BookModel update = ibookService.updateBooksData(token,id,bookDTO);
         Response response = new Response(update, "Book Update Successful");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     //--------------------------------- Delete Book Data ------------------------------------------------------------------
-    @DeleteMapping("/Delete_Book")
+    @DeleteMapping("/Delete_Book/Admin")
     public ResponseEntity<Response> deleteBook(@RequestHeader String token, @RequestParam int id) {
         ibookService.deleteBookById(token, id);
         Response response = new Response("book deleted for id :" +id+" ", "Book delete Successful");

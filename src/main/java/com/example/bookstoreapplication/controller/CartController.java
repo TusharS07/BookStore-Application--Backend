@@ -54,7 +54,7 @@ public class CartController {
     }
 
     //--------------------------------- Get Cart Data by Cart Id (Only Admin) ---------------------------------
-    @GetMapping("/get_Cart_Record_byCartId")
+    @GetMapping("/get_Cart_Record_byCartId/Admin")
     public ResponseEntity<Response> getCartRecordbyCartId(@RequestHeader String token, @RequestParam int cartId) {
         CartModel cartModel = icartService.getCartRecordById(token, cartId);
         Response response = new Response(cartModel, "Cart record retrieved successfully for CartId:-" +cartId);

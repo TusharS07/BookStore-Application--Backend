@@ -24,4 +24,5 @@ public class BookModel {
     private int price;
     private String profilePic;
     private String bookDescription;
+
 }

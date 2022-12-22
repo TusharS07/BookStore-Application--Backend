@@ -49,7 +49,7 @@ public class CartService implements IcartService{
                     CartModel cart = cartRepository.findByUserIdBookId(user.getId(), cartDTO.getBookId());
                     if (cart == null) {
                         double totalPrice = calculateTotalPrice(cartDTO.getQuantity(), book.getPrice());
-                        cart = new CartModel(user, book, cartDTO.getBookId(), totalPrice);
+                        cart = new CartModel(user, book, cartDTO.getQuantity(), totalPrice);
                         return cartRepository.save(cart);
                     }
                     throw new BookStoreException("This Book Already Exist into Your Cart"

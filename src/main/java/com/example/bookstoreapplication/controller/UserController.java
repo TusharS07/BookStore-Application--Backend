@@ -73,7 +73,7 @@ public class UserController {
     //----------------------------- Update UserData --------------------------------
 
     @PutMapping("/UpdateData")
-    public ResponseEntity<Response> updateData(UpdateDTO updateDTO, @RequestHeader String token)  {
+    public ResponseEntity<Response> updateData(@Valid @RequestBody UpdateDTO updateDTO, @RequestHeader String token)  {
         UserModel update = iuserService.update(updateDTO, token);
         Response response = new Response(update, "User Updated Successfully");
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -82,7 +82,7 @@ public class UserController {
     //----------------------------- Show_All_UserData --------------------------------
 
 
-    @GetMapping("/Show_All_User")
+    @GetMapping("/Show_All_User/Admin")
     public ResponseEntity<Response> getAllUser(@RequestHeader String token){
         List<UserModel> userModelList = iuserService.showAllUsers(token);
         Response response = new Response(userModelList, "All users Data" );
