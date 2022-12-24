@@ -16,10 +16,4 @@ public interface IcartService {
     CartModel getCartRecordById(String token, int cartId);
 
     List<CartModel> getUserCartRecordByUser(String token);
-
-
-
-
-
-
 }

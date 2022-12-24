@@ -45,6 +45,31 @@ public class OrderService implements IorderService {
     JwtUtils jwtUtils;
 
 
+    //--------------------------------- show All Books Info And Total qty And Total Price (user) befor Order -------------------------------------------------------------
+    @Override
+    public String showAllBooksInfoAndTotalqtyAndPrice(String token) {
+        LoginDTO loginDTO = jwtUtils.decodeToken(token);
+        UserModel user = userRepository.findByEmailAndPassword(loginDTO.getEmail(), loginDTO.getPassword());
+        if (userRepository.findByEmail(user.getEmail()).isLogin()) {
+            List<CartModel> userCart = cartRepository.findByUser(user.getId());
+            if (userCart.isEmpty()) {
+                throw new BookStoreException("Empty Cart");
+            }
+            double totalOrderPrice = 0;
+            int totalOrderQty = 0;
+
+            for (int i = 0; i < userCart.size(); i++) {
+                totalOrderPrice = totalOrderPrice + userCart.get(i).getTotalPrice();
+                totalOrderQty = totalOrderQty + userCart.get(i).getQuantity();
+            }
+
+            return "You Have "+userCart.size()+ " Books In Your Cart"+
+                    "\n Total Books Price:- "+totalOrderPrice+
+                    "\n Total Books Quantity:- "+totalOrderQty+
+                    "\n"+userCart.stream().toList();
+        }
+        throw new BookStoreException("Please sign in your account");
+    }
 
     //--------------------------------- place Order(User) ---------------------------------------
     @Override
@@ -64,11 +89,43 @@ public class OrderService implements IorderService {
                 orderedBooks.add(cart.get(i).getBookData());
             }
 
+            //for new Address
             OrderModel orderModel = modelMapper.map(orderDTO, OrderModel.class);
+
             orderModel.setUserId(user.getId());
             orderModel.setBook(orderedBooks);
             orderModel.setOrderQuantity(totalOrderQty);
             orderModel.setPrice(totalOrderPrice);
+
+            //for getting default address
+            if (orderModel.getFirstName() == null) {
+                orderModel.setFirstName(user.getFirstName());
+            }
+            if (orderModel.getLastName() == null) {
+                orderModel.setLastName(user.getLastName());
+            }
+            if (orderModel.getPhoneNo() == null) {
+                orderModel.setPhoneNo(user.getPhoneNo());
+            }
+            if (orderModel.getPinCode() == null) {
+                orderModel.setPinCode(user.getPinCode());
+            }
+            if (orderModel.getLocality() == null) {
+                orderModel.setLocality(user.getLocality());
+            }
+            if (orderModel.getAddress() == null) {
+                orderModel.setAddress(user.getAddress());
+            }
+            if (orderModel.getCity() == null) {
+                orderModel.setCity(user.getCity());
+            }
+            if (orderModel.getLandMark() == null) {
+                orderModel.setLandMark(user.getLandMark());
+            }
+            if (orderModel.getAddressType() == null) {
+                orderModel.setAddressType(user.getAddressType());
+            }
+
             orderRepository.save(orderModel);
 
             emailService.sendMail(user.getEmail(), "Hi " + user.getFirstName() + " " + user.getLastName() + "," +
@@ -169,17 +226,42 @@ public class OrderService implements IorderService {
         if (userRepository.findByEmail(user.getEmail()).isLogin()) {
             if (orderRepository.findById(orderId).isPresent()) {
                 OrderModel order = orderRepository.findById(orderId).get();
-                if (order.getIsCancel() == false) {
-                    order.setIsCancel(true);
-                    orderRepository.save(order);
-                    emailService.sendMail(user.getEmail(),"Hi " + user.getFirstName() + " " + user.getLastName()+ ","+
-                            "\n\nYou've successfully cancelled your order " +
-                            "\n\nAt your request, we canceled your order.Here's" +
-                            "\nyour Order info:" +
-                            "\n\nOrder ID: "+orderId);
-                    return "Order Cancel Successful!";
+                if (order.getUserId() == user.getId()) {
+                    if (order.getIsCancel() == false) {
+                        order.setIsCancel(true);
+                        orderRepository.save(order);
+                        emailService.sendMail(user.getEmail(),"Hi " + user.getFirstName() + " " + user.getLastName()+ ","+
+                                "\n\nYou've successfully cancelled your order " +
+                                "\n\nAt your request, we canceled your order.Here's" +
+                                "\nyour Order info:" +
+                                "\n\nOrder ID: "+orderId);
+                        return "Order Cancel Successful!";
+                    }
+                    throw new BookStoreException("Order is already canceled!");
                 }
-                throw new BookStoreException("Order is already canceled!");
+                throw new BookStoreException("please Enter only You Order ID");
+            }
+            throw new BookStoreException("Order Record Not Found" + "\nInvalid Order_Id");
+        }
+        throw new BookStoreException("Please sign in your account");
+    }
+
+
+    //--------------------------------- Change Order Mobile No (user) -------------------------------------------------------------
+
+    @Override
+    public OrderModel changeMobileNo(String token, int orderId, String mobNo) {
+        LoginDTO loginDTO = jwtUtils.decodeToken(token);
+        UserModel user = userRepository.findByEmailAndPassword(loginDTO.getEmail(), loginDTO.getPassword());
+        if (userRepository.findByEmail(user.getEmail()).isLogin()) {
+            if (orderRepository.findById(orderId).isPresent()) {
+                OrderModel order = orderRepository.findById(orderId).get();
+                if (order.getUserId() == user.getId()) {
+                    order.setPhoneNo(mobNo);
+                    orderRepository.save(order);
+                    return order;
+                }
+                throw new BookStoreException("please Enter only You Order ID");
             }
             throw new BookStoreException("Order Record Not Found" + "\nInvalid Order_Id");
         }

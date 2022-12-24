@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Entity
 public class UserModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String firstName;
     private String lastName;
@@ -20,6 +20,17 @@ public class UserModel {
     private String password;
     private boolean isLogin = false;
     private String role ;
+
+    private String phoneNo;
+    private String pinCode;
+    private String locality;
+    private String address;
+    private String city;
+    private String landMark;
+    private String AddressType;
+
+//    @OneToOne(mappedBy = "userData")
+//    CartModel cartModel;
 
 
 }

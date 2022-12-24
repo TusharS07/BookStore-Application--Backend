@@ -16,4 +16,8 @@ public interface IorderService {
     String removeOrderDetailsByOrderId(String token, int orderId);
     String cancelOrder(String token, int orderId);
 
+    OrderModel changeMobileNo(String token, int orderId, String mobNo);
+
+    String showAllBooksInfoAndTotalqtyAndPrice(String token);
+
 }

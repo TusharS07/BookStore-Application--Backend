@@ -10,8 +10,5 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<OrderModel, Integer> {
 
-    @Query(value = "SELECT * FROM bookstore_application.order_model where user_id=:userId" , nativeQuery = true)
-    List<OrderModel> findByUser(int userId);
-
     List<OrderModel> findAllByUserId(int userId);
 }

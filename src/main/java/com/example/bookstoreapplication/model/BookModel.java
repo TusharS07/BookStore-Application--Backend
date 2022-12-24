@@ -16,7 +16,7 @@ import javax.persistence.*;
 public class BookModel {
     @Column(name = "bookId")
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue (strategy = GenerationType.AUTO)
     private int bookId;
     private String bookName;
     private String authorName;

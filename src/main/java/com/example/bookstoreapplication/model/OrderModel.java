@@ -16,9 +16,10 @@ import java.util.List;
 public class OrderModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int orderId;
-    private String name;
+    private String firstName;
+    private String lastName;
     private String phoneNo;
     private String pinCode;
     private String locality;
