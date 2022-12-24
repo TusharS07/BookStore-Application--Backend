@@ -19,7 +19,7 @@ public class CartController {
     IcartService icartService;
 
 
-    //--------------------------------- Add New Cart Data ---------------------------------
+    //--------------------------------- Add New Cart Data (Only User)---------------------------------
     @PostMapping("/AddToCart")
     public ResponseEntity<Response> addToCart(@RequestHeader String token, @RequestBody CartDTO cartDTO) {
         CartModel cartModel = icartService.addToCart(token, cartDTO);
@@ -27,7 +27,7 @@ public class CartController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //--------------------------------- Update Cart Data ---------------------------------
+    //--------------------------------- Update Cart Data (Only User)---------------------------------
     @PutMapping("UpdateBookCart")
     public ResponseEntity<Response> updateBookCart(@RequestHeader String token, @RequestBody CartDTO cartDTO) {
         CartModel cartModel = icartService.updateBookCart(token, cartDTO);
@@ -35,7 +35,7 @@ public class CartController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //--------------------------------- Delete Cart Data ---------------------------------
+    //--------------------------------- Delete Cart Data (Only User)---------------------------------
     @DeleteMapping("/Remove_Book_From_Cart")
     public ResponseEntity<Response> removeBookFromCart(@RequestHeader String token, @RequestParam int cartId) {
         icartService.removeBookFromCart(token,cartId);

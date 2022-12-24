@@ -18,7 +18,7 @@ public class BookController {
     @Autowired
     IbookService ibookService;
 
-    //----------------------------- Add New Books ----------------------------------------------------------------------
+    //----------------------------- Add New Books (Only Admin)----------------------------------------------------------------------
     @PostMapping("/Add_Books/Admin")
     public ResponseEntity<Response> addBooks(@RequestHeader String token, @RequestBody BookDTO bookDTO) {
         ibookService.addBooks(token,bookDTO);
@@ -26,14 +26,14 @@ public class BookController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //----------------------------- Update Books Data ------------------------------------------------------------------
+    //----------------------------- Update Books Data (Only Admin)------------------------------------------------------------------
     @PutMapping("/Update_Books_Data/Admin")
     public ResponseEntity<Response> updateBook(@RequestHeader String token,@RequestParam int id, @RequestBody BookDTO bookDTO) {
         BookModel update = ibookService.updateBooksData(token,id,bookDTO);
         Response response = new Response(update, "Book Update Successful");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    //--------------------------------- Delete Book Data ------------------------------------------------------------------
+    //--------------------------------- Delete Book Data (Only Admin)------------------------------------------------------------------
     @DeleteMapping("/Delete_Book/Admin")
     public ResponseEntity<Response> deleteBook(@RequestHeader String token, @RequestParam int id) {
         ibookService.deleteBookById(token, id);
@@ -41,7 +41,7 @@ public class BookController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //----------------------------- Show All Books Data --------------------------------------------------------------------
+    //----------------------------- Show All Books Data (AnyOne)--------------------------------------------------------------------
     @GetMapping("/Show All Books Data")
     public ResponseEntity<Response> showAllBooksData(){
         List<BookModel> bookModelList = ibookService.showAllBooks();
@@ -49,7 +49,7 @@ public class BookController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //----------------------------- Search Books by Book id --------------------------------------------------------------------
+    //----------------------------- Search Books by Book id (AnyOne)--------------------------------------------------------------------
     @GetMapping("/Find_Book_By_Id")
     public ResponseEntity<Response> getBookById(@RequestParam int id) {
         BookModel bookModel = ibookService.getBookByID(id);
@@ -57,7 +57,7 @@ public class BookController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //----------------------------- Search Books by Book Name --------------------------------------------------------------------
+    //----------------------------- Search Books by Book Name (AnyOne)--------------------------------------------------------------------
     @GetMapping("/Search_Books_By_Name")
     public ResponseEntity<Response> searchBooksByName(@RequestParam String bookName) {
         List<BookModel> bookModelList = ibookService.searchBookByName(bookName);
@@ -65,7 +65,7 @@ public class BookController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //----------------------------- Search Books by Author Name --------------------------------------------------------------------
+    //----------------------------- Search Books by Author Name (AnyOne)--------------------------------------------------------------------
     @GetMapping("/Search_Books_By_Author_Name")
     public ResponseEntity<Response> searchBooksByAuthorName(@RequestParam String authorName) {
         List<BookModel> bookModelList = ibookService.searchBookByAuthorName(authorName);
@@ -73,7 +73,7 @@ public class BookController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //--------------------------------- Sort Book Data By Price High To Low ---------------------------------
+    //--------------------------------- Sort Book Data By Price High To Low (AnyOne)---------------------------------
     @GetMapping("/Sort_Books_By_Price_HighToLow")
     public ResponseEntity<Response> sortBooksByPriceHighToLow() {
         List<BookModel> sortedList = ibookService.sortBookByPriceHighToLow();
@@ -81,7 +81,7 @@ public class BookController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //--------------------------------- Sort Book Data By Price Low To High ------------------------------------------------
+    //--------------------------------- Sort Book Data By Price Low To High (AnyOne)------------------------------------------------
     @GetMapping("/Sort_Books_By_Price_LowToHigh")
     public ResponseEntity<Response> sortBooksByPriceLowToHigh() {
         List<BookModel> sortedList = ibookService.sortBookByPriceLowToHigh();
@@ -89,7 +89,7 @@ public class BookController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //--------------------------------- Sort Book Data By Newest Arrivals books --------------------------------------------
+    //--------------------------------- Sort Book Data By Newest Arrivals books (AnyOne)--------------------------------------------
     @GetMapping("/Sort_Books_By_Newest_Arrivals")
     public ResponseEntity<Response> sortBooksByNewestArrivals() {
         List<BookModel> sortedList = ibookService.sortBooksByNewestArrivals();

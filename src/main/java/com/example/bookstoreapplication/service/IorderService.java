@@ -11,7 +11,9 @@ public interface IorderService {
     List<OrderModel> showUserOrders(String token);
     List<OrderModel> getAllOrderDetails(String token);
 
-    OrderModel getOrderDatabyOrderId(String token, int orderId);
+    OrderModel getOrderdetailsbyOrderIdforUser(String token, int orderId);
+    OrderModel getOrderdetailsbyOrderIdforAdmin(String token, int orderId);
+
 
     String removeOrderDetailsByOrderId(String token, int orderId);
     String cancelOrder(String token, int orderId);

@@ -26,7 +26,7 @@ public class OrderController {
 
     }
 
-    //--------------------------------- place Order -----------------------------------------------------------------------------------------
+    //--------------------------------- place Order (Only User)-----------------------------------------------------------------------------------------
     @PostMapping("/placeOrder")
     public ResponseEntity<Response> placeOrder(@RequestHeader String token, @Valid @RequestBody OrderDTO orderDTO) {
         OrderModel orderModel = iorderService.placeOrder(token, orderDTO);
@@ -34,7 +34,7 @@ public class OrderController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //--------------------------------- Get Order Data(User) ---------------------------------------------------------------------------------
+    //--------------------------------- Get Order Data (Only User) ---------------------------------------------------------------------------------
     @GetMapping("/Show_All_Orders/User")
     public ResponseEntity<Response> showUserOrders(@RequestHeader String token) {
         List<OrderModel> orders = iorderService.showUserOrders(token);
@@ -42,7 +42,7 @@ public class OrderController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //--------------------------------- Get All Orders Data(Admin) ---------------------------------------------------------------------------
+    //--------------------------------- Get All Orders Data (Only Admin) ---------------------------------------------------------------------------
     @GetMapping("/Show_All_Orders/Admin")
     public ResponseEntity<Response> GetAllOrdersDataAsAdmin(@RequestHeader String token) {
         List<OrderModel> allOrders = iorderService.getAllOrderDetails(token);
@@ -50,15 +50,23 @@ public class OrderController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //--------------------------------- Get Order Data by Order ID (Admin or User) both can access --------------------------------------------
-    @GetMapping("/get_Order_Details_by_OrderId/AdminOrUser")
-    public ResponseEntity<Response> getOrderDetailsbyOrderId(@RequestHeader String token, @RequestParam int orderId) {
-        OrderModel orderDetails = iorderService.getOrderDatabyOrderId(token,orderId);
+    //--------------------------------- Get Order Data by Order ID (only Admin) --------------------------------------------
+    @GetMapping("/get_Order_Details_by_OrderId/Admin")
+    public ResponseEntity<Response> getOrderDetailsByOrderIdForAdmin(@RequestHeader String token, @RequestParam int orderId) {
+        OrderModel orderDetails = iorderService.getOrderdetailsbyOrderIdforAdmin(token,orderId);
         Response response = new Response(orderDetails, "Order Details Found for Order ID:"+orderId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //--------------------------------- Remove OrderDetails By OrderId (Admin) ----------------------------------------------------------------
+    //--------------------------------- Get Order Data by Order ID (Only User) --------------------------------------------
+    @GetMapping("/get_Order_Details_by_OrderId/User")
+    public ResponseEntity<Response> getOrderDetailsByOrderIdForUser(@RequestHeader String token, @RequestParam int orderId) {
+        OrderModel orderDetails = iorderService.getOrderdetailsbyOrderIdforUser(token,orderId);
+        Response response = new Response(orderDetails, "Order Details Found for Order ID:"+orderId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    //--------------------------------- Remove OrderDetails By OrderId (Only Admin) ----------------------------------------------------------------
     @DeleteMapping("/Remove_Order_Details/Admin")
     public ResponseEntity<Response> removeOrderDataByOrderId(@RequestHeader String token, @RequestParam int orderId) {
         iorderService.removeOrderDetailsByOrderId(token, orderId);
@@ -66,7 +74,7 @@ public class OrderController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //--------------------------------- Cancel Order (user) -----------------------------------------------------------------------------------
+    //--------------------------------- Cancel Order (Only user) -----------------------------------------------------------------------------------
     @PutMapping("/Cancel_Order")
     public ResponseEntity<Response> cancelOrder(@RequestHeader String token, @RequestParam int orderId) {
         iorderService.cancelOrder(token, orderId);
@@ -74,7 +82,7 @@ public class OrderController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //--------------------------------- Change Order Mobile No (user) --------------------------------------------------------------------------
+    //--------------------------------- Change Order Mobile No (Only user) --------------------------------------------------------------------------
     @PutMapping("/Change_Order_PhoneNo")
     public ResponseEntity<Response> changeOrderAddressOrPhoneNo(@RequestHeader String token, @RequestParam int orderId, @RequestParam String phoneNo) {
         OrderModel updateOrder = iorderService.changeMobileNo(token, orderId, phoneNo);

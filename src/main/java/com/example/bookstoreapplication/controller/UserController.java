@@ -29,7 +29,7 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //--------------------------------- User Login ---------------------------------
+    //--------------------------------- User Login (Both User or Admin)---------------------------------
 
     @PostMapping("/Login")
     public ResponseEntity<Response> loginPage(@RequestBody LoginDTO loginDTO) {
@@ -38,7 +38,7 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //--------------------------------- User Logout ---------------------------------
+    //--------------------------------- User Logout (Both User or Admin)---------------------------------
     @PutMapping("/Logout")
     public ResponseEntity<Response> logOutUser(@RequestHeader String token) {
         iuserService.logout(token);
@@ -46,7 +46,7 @@ public class UserController {
         return  new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //--------------------------------- Forgot Password ---------------------------------
+    //--------------------------------- Forgot Password (Both User or Admin)---------------------------------
     @PutMapping("/Forgot_Password")
     public ResponseEntity<Response> forgotPassword(@RequestHeader String token, @RequestParam String password) {
         iuserService.forgotPassword(token, password);
@@ -54,32 +54,40 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //--------------------------------- Delete User Data ---------------------------------
-    @DeleteMapping("/DeleteUser")
+    //--------------------------------- Delete User Data (Only User)---------------------------------
+    @DeleteMapping("/DeleteUser/user")
     public ResponseEntity<Response> delete(@RequestHeader String token) {
         iuserService.delete(token);
         Response response = new Response("Deleted for User: ", "Deleted Successfully");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //--------------------------------- Get User By Token Id ---------------------------------
-    @GetMapping("/getData")
+    //--------------------------------- Delete User (Only Admin) ---------------------------------
+    @DeleteMapping("/DeleteUser/Admin")
+    public ResponseEntity<Response> deleteUserAsAdmin(@RequestHeader String token, @RequestParam int id) {
+        iuserService.deleteUserAsAdmin(token, id);
+        Response response = new Response("Deleted for User: " +id, "Deleted Successfully");
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    //--------------------------------- Get User Data (Only User) ---------------------------------
+    @GetMapping("/Get_Data/user")
     public ResponseEntity<Response> getUserData(@RequestHeader String token) {
         UserModel getUserData = iuserService.getUserData(token);
         Response response = new Response(getUserData, "User Data");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //----------------------------- Update UserData --------------------------------
+    //----------------------------- Update UserData (Only User)--------------------------------
 
-    @PutMapping("/UpdateData")
+    @PutMapping("/UpdateData/user")
     public ResponseEntity<Response> updateData(@Valid @RequestBody UpdateDTO updateDTO, @RequestHeader String token)  {
         UserModel update = iuserService.update(updateDTO, token);
         Response response = new Response(update, "User Updated Successfully");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //----------------------------- Show_All_UserData --------------------------------
+    //----------------------------- Show_All_UserData (Only Admin)--------------------------------
 
 
     @GetMapping("/Show_All_User/Admin")

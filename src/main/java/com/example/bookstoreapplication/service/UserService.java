@@ -30,7 +30,7 @@ public class UserService implements IuserService{
     @Autowired
     JwtUtils jwtUtils;
 
-    //--------------------------------- Register New User ---------------------------------
+    //--------------------------------- Register New User (Only User)---------------------------------
     @Override
     public String registerNewUser(RegisterDTO registerDTO) {
         if (userRepository.findByEmail(registerDTO.getEmail()) == null) {
@@ -43,7 +43,7 @@ public class UserService implements IuserService{
         throw  new BookStoreException("User Already Exist"+"\n Please Try with Another Email id");
     }
 
-    //--------------------------------- User Login ---------------------------------
+    //--------------------------------- User Login (Both Admin or User)---------------------------------
 
     @Override
     public String login(LoginDTO loginDTO) {
@@ -54,7 +54,7 @@ public class UserService implements IuserService{
                 userModel.setLogin(true);
                 userModel.setId(userModel.getId());
                 userRepository.save(userModel);
-                //emailService.sendMail(loginDTO.getEmail(), "Login Successful");
+                emailService.sendMail(loginDTO.getEmail(), "Login Successful");
                 return token;
             }
             throw new BookStoreException("please check Your Password");
@@ -62,7 +62,7 @@ public class UserService implements IuserService{
         throw new BookStoreException("Check Your Email-ID");
     }
 
-    //--------------------------------- User Logout ---------------------------------
+    //--------------------------------- User Logout (Both Admin or User)---------------------------------
     @Override
     public String logout(String token) {
         LoginDTO loginDTO = jwtUtils.decodeToken(token);
@@ -74,7 +74,7 @@ public class UserService implements IuserService{
         }
         throw new BookStoreException("User Not Found");
     }
-    //--------------------------------- Forgot Password ---------------------------------
+    //--------------------------------- Forgot Password (Both Admin or User)---------------------------------
     @Override
     public String forgotPassword(String token, String password) {
         LoginDTO loginDTO = jwtUtils.decodeToken(token);
@@ -88,7 +88,7 @@ public class UserService implements IuserService{
         throw new BookStoreException("please Login with Proper email and password");
     }
 
-    //--------------------------------- Delete User Data ---------------------------------
+    //--------------------------------- Delete User Data (Only User)---------------------------------
 
     @Override
     public String delete(String token) {
@@ -101,7 +101,23 @@ public class UserService implements IuserService{
         throw new BookStoreException("User Not Found");
     }
 
-    //--------------------------------- Update User Data ---------------------------------
+    //--------------------------------- Delete User (Only Admin)---------------------------------
+
+    @Override
+    public String deleteUserAsAdmin(String token, int id) {
+        LoginDTO loginDTO = jwtUtils.decodeToken(token);
+        UserModel User = userRepository.findByEmailAndPassword(loginDTO.getEmail(), loginDTO.getPassword());
+        if (userRepository.findByEmail(User.getEmail()).getRole().equals("Admin") && userRepository.findByEmail(User.getEmail()).isLogin()) {
+            if (userRepository.findById(id).isPresent()) {
+                userRepository.deleteById(id);
+                return "user deleted";
+            }
+            throw new BookStoreException("User Not Found");
+        }
+        throw new BookStoreException("Please sign in your account as Admin");
+    }
+
+    //--------------------------------- Update User Data (Both Admin or User)---------------------------------
 
     @Override
     public UserModel update(UpdateDTO updateDTO, String token) {
@@ -129,7 +145,7 @@ public class UserService implements IuserService{
         throw new BookStoreException("Email And Password is not Matched");
     }
 
-    //--------------------------------- Get User By Token Id ---------------------------------
+    //--------------------------------- Get User Data (Only User)---------------------------------
     @Override
     public UserModel getUserData(String token) {
         LoginDTO loginDTO = jwtUtils.decodeToken(token);
@@ -140,7 +156,7 @@ public class UserService implements IuserService{
         throw new BookStoreException("Invalid User");
     }
 
-    //----------------------------- Show_All_UserData --------------------------------
+    //----------------------------- Show_All_UserData (Only Admin)--------------------------------
 
     @Override
     public List<UserModel> showAllUsers(String token) {

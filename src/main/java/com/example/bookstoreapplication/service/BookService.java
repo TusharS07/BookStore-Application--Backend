@@ -32,7 +32,7 @@ public class BookService implements IbookService{
     JwtUtils jwtUtils;
 
 
-    //----------------------------- Add New Books --------------------------------------------------------------------
+    //----------------------------- Add New Books (Only Admin) --------------------------------------------------------------------
     @Override
     public BookModel addBooks(String token, BookDTO bookDTO) {
         LoginDTO loginDTO = jwtUtils.decodeToken(token);
@@ -44,7 +44,7 @@ public class BookService implements IbookService{
         throw new BookStoreException("Only Admin can add Books"+"\nplease login Application As admin");
     }
 
-    //----------------------------- Update Books Data --------------------------------------------------------------------
+    //----------------------------- Update Books Data (Only Admin)--------------------------------------------------------------------
     @Override
     public BookModel updateBooksData(String token, int id, BookDTO bookDTO) {
         LoginDTO loginDTO = jwtUtils.decodeToken(token);
@@ -79,7 +79,7 @@ public class BookService implements IbookService{
         throw new BookStoreException("Only Admin can Update Books"+"\nplease login Application As admin");
     }
 
-    //--------------------------------- Delete Book Data ------------------------------------------------------------------
+    //--------------------------------- Delete Book Data (Only Admin)------------------------------------------------------------------
     @Override
     public String deleteBookById(String token, int id) {
         LoginDTO loginDTO = jwtUtils.decodeToken(token);
@@ -94,7 +94,7 @@ public class BookService implements IbookService{
         throw new BookStoreException("Only Admin can Delete Books"+"\nplease login Application As admin");
     }
 
-    //----------------------------- Show All Books Data --------------------------------------------------------------------
+    //----------------------------- Show All Books Data (Both Admin or User)--------------------------------------------------------------------
     @Override
     public List<BookModel> showAllBooks() {
         if (bookRepository.findAll().isEmpty()) {
@@ -103,7 +103,7 @@ public class BookService implements IbookService{
         return bookRepository.findAll();
     }
 
-    //----------------------------- find Books by id --------------------------------------------------------------------
+    //----------------------------- find Books by id (Both Admin or User)--------------------------------------------------------------------
 
     @Override
     public BookModel getBookByID(int id) {
@@ -113,7 +113,7 @@ public class BookService implements IbookService{
         throw new BookStoreException("Invalid id");
     }
 
-    //----------------------------- Search Books by Book Name --------------------------------------------------------------------
+    //----------------------------- Search Books by Book Name (Both Admin or User)--------------------------------------------------------------------
     @Override
     public List<BookModel> searchBookByName(String bookName) {
         List<BookModel> bookList = bookRepository.findByBookName(bookName);
@@ -123,7 +123,7 @@ public class BookService implements IbookService{
         return bookList;
     }
 
-    //----------------------------- Search Books by Author Name --------------------------------------------------------------------
+    //----------------------------- Search Books by Author Name (Both Admin or User)--------------------------------------------------------------------
     @Override
     public List<BookModel> searchBookByAuthorName(String authorName) {
         List<BookModel> bookModelList = bookRepository.findAllByAuthorName(authorName);
@@ -133,20 +133,20 @@ public class BookService implements IbookService{
         return bookModelList;
     }
 
-    //--------------------------------- Sort Book Data By Price High To Low ---------------------------------
+    //--------------------------------- Sort Book Data By Price High To Low (Both Admin or User)---------------------------------
 
     @Override
     public List<BookModel> sortBookByPriceHighToLow() {
         return bookRepository.findAll(Sort.by(Sort.Direction.DESC,"price"));
     }
 
-    //--------------------------------- Sort Book Data By Price Low To High ---------------------------------
+    //--------------------------------- Sort Book Data By Price Low To High (Both Admin or User)---------------------------------
     @Override
     public List<BookModel> sortBookByPriceLowToHigh() {
         return bookRepository.findAll(Sort.by(Sort.Direction.ASC,"price"));
     }
 
-    //--------------------------------- Sort Book Data By Newest Arrivals books ---------------------------------
+    //--------------------------------- Sort Book Data By Newest Arrivals books (Both Admin or User)---------------------------------
     @Override
     public List<BookModel> sortBooksByNewestArrivals() {
         return bookRepository.findAll(Sort.by(Sort.Direction.DESC,"bookId"));

@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Service
 public class OrderService implements IorderService {
 
@@ -65,8 +66,9 @@ public class OrderService implements IorderService {
 
             return "You Have "+userCart.size()+ " Books In Your Cart"+
                     "\n Total Books Price:- "+totalOrderPrice+
-                    "\n Total Books Quantity:- "+totalOrderQty+
-                    "\n"+userCart.stream().toList();
+                    "\n Total Books Quantity:- "+totalOrderQty;
+
+
         }
         throw new BookStoreException("Please sign in your account");
     }
@@ -188,18 +190,40 @@ public class OrderService implements IorderService {
         throw new BookStoreException("Please sign in your account as Admin");
     }
 
-    //--------------------------------- Get Order Data by Order Id (Admin or User) -----------------------------------------------------------
+    //--------------------------------- Get Order Data by Order Id (User) -----------------------------------------------------------
     @Override
-    public OrderModel getOrderDatabyOrderId(String token, int orderId) {
+    public OrderModel getOrderdetailsbyOrderIdforUser(String token, int orderId) {
         LoginDTO loginDTO = jwtUtils.decodeToken(token);
         UserModel user = userRepository.findByEmailAndPassword(loginDTO.getEmail(), loginDTO.getPassword());
         if (userRepository.findByEmail(user.getEmail()).isLogin()) {
+            if (orderRepository.findById(orderId).isPresent()) {
+                OrderModel order = orderRepository.findById(orderId).get();
+                if (order.getUserId() == user.getId()) {
+                    return order;
+                }
+                throw new BookStoreException("""
+                        Invalid Order ID
+                        please Enter only You Order ID
+                        You can see only your Orders""");
+            }
+            throw new BookStoreException("Order Record Not Found" + "\nInvalid Order_Id");
+        }
+        throw new BookStoreException("Please sign in your account");
+    }
+
+
+    //--------------------------------- Get Order Data by Order Id (Admin) -----------------------------------------------------------
+    @Override
+    public OrderModel getOrderdetailsbyOrderIdforAdmin(String token, int orderId) {
+        LoginDTO loginDTO = jwtUtils.decodeToken(token);
+        UserModel user = userRepository.findByEmailAndPassword(loginDTO.getEmail(), loginDTO.getPassword());
+        if (userRepository.findByEmail(user.getEmail()).getRole().equals("Admin") && userRepository.findByEmail(user.getEmail()).isLogin()) {
             if (orderRepository.findById(orderId).isPresent()) {
                 return orderRepository.findById(orderId).get();
             }
             throw new BookStoreException("Order Record Not Found" + "\nInvalid Order_Id");
         }
-        throw new BookStoreException("Please sign in your account");
+        throw new BookStoreException("Please sign in your account as Admin");
     }
 
 
@@ -239,7 +263,10 @@ public class OrderService implements IorderService {
                     }
                     throw new BookStoreException("Order is already canceled!");
                 }
-                throw new BookStoreException("please Enter only You Order ID");
+                throw new BookStoreException("""
+                        Invalid Order ID
+                        please Enter only You Order ID
+                        You can Cancel only your Orders""");
             }
             throw new BookStoreException("Order Record Not Found" + "\nInvalid Order_Id");
         }

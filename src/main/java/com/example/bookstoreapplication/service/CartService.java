@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+
 
 
 @Service
@@ -37,7 +37,7 @@ public class CartService implements IcartService{
     JwtUtils jwtUtils;
 
 
-    //--------------------------------- Add New Cart Data -----------------------------------------------------------------
+    //--------------------------------- Add New Cart Data (Only User)-----------------------------------------------------------------
     @Override
     public CartModel addToCart(String token, CartDTO cartDTO) {
         LoginDTO loginDTO = jwtUtils.decodeToken(token);
@@ -68,7 +68,7 @@ public class CartService implements IcartService{
         return quantity * bookPrice;
     }
 
-    //--------------------------------- Update Cart Data ------------------------------------------------------------------
+    //--------------------------------- Update Cart Data (Only User)------------------------------------------------------------------
     @Override
     public CartModel updateBookCart(String token, CartDTO cartDTO) {
         LoginDTO loginDTO = jwtUtils.decodeToken(token);
@@ -91,15 +91,22 @@ public class CartService implements IcartService{
         throw new BookStoreException("Please first Login Application");
     }
 
-    //--------------------------------- Delete Cart Data -----------------------------------------------------------------
+    //--------------------------------- Delete Cart Data (Only User)-----------------------------------------------------------------
     @Override
     public String removeBookFromCart(String token, int cartId) {
         LoginDTO loginDTO = jwtUtils.decodeToken(token);
         UserModel user = userRepository.findByEmailAndPassword(loginDTO.getEmail(), loginDTO.getPassword());
         if (userRepository.findByEmail(user.getEmail()).isLogin()) {
             if (cartRepository.findById(cartId).isPresent()) {
-                cartRepository.deleteById(cartId);
-                return "Delete Successful";
+                CartModel cartModel = cartRepository.findById(cartId).get();
+                if (cartModel.getUserData().getId() == user.getId()) {
+                    cartRepository.deleteById(cartId);
+                    return "Delete Successful";
+                }
+                throw new BookStoreException("""
+                        Invalid Cart ID
+                        please Enter only You Cart ID
+                        You can Remove Books from only yours Cart""");
             }
             throw new BookStoreException("Book Not Found");
         }
@@ -121,7 +128,7 @@ public class CartService implements IcartService{
         throw new BookStoreException("Only Admin can see cart records by Cart-id"+"\nplease login Application As admin");
     }
 
-    //--------------------------------- Show Cart Data(Books) ---------------------------------
+    //--------------------------------- Show Cart Data(Books) (Only User) ---------------------------------
     @Override
     public List<CartModel> getUserCartRecordByUser(String token) {
         LoginDTO loginDTO = jwtUtils.decodeToken(token);

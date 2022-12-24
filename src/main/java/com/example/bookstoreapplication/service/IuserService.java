@@ -13,6 +13,7 @@ public interface IuserService {
     String logout(String token);
     String forgotPassword(String token, String password);
     String delete(String token);
+    String deleteUserAsAdmin(String token, int id);
 
     UserModel update(UpdateDTO updateDTO, String token);
 
